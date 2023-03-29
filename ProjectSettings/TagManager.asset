@@ -12,6 +12,8 @@ TagManager:
   - parapet
   - bot_enemy
   - bot_ally
+  - position
+  - positionsGroup
   layers:
   - Default
   - TransparentFX

@@ -31,7 +31,7 @@ public class ShootState : State
 
             if (delayShoot < 0f)
             {
-                character.Gun.Fire(character);
+                character.Gun.Fire();
                 delayShoot = delayShootSample;
             }
             else

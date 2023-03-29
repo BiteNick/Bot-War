@@ -5,7 +5,7 @@ using UnityEngine;
 public class AK : Gun
 {
 
-    override public void Fire(BotRun character)
+    override protected void FireWithDelay()
     {
         if (delay <= 0)
         {
@@ -13,7 +13,16 @@ public class AK : Gun
             Ray ray = new Ray(SpawnBulletPos.position, SpawnBulletPos.transform.forward);
 
             Vector3 targetPoint;
-            ray.direction = Quaternion.Euler(0, Random.Range(-spread + character.spreadDebuff, spread - character.spreadDebuff), 0) * transform.right;
+            if (spread - character.spreadDebuff > 0)
+            {
+                ray.direction = Quaternion.Euler(0, Random.Range(-spread + character.spreadDebuff, spread - character.spreadDebuff), 0) * transform.right;
+            }
+            else
+            {
+                ray.direction = Quaternion.Euler(0, 0, 0) * transform.right;
+
+            }
+
             if (Physics.Raycast(ray, out hit))
             {
                 targetPoint = hit.point;

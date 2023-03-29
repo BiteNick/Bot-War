@@ -22,9 +22,14 @@ public class Gun : MonoBehaviour
     protected float delay; //осталось до конца следующего выстрела
     protected float offsetY = -90; //погрешность поворота оружия
     protected Animator anim;
+    protected BotRun character;
+    [SerializeField]protected float fireDelay = 0.1f; //чтобы сначала выставил винтовку, потом атаковал
     void Start()
     {
-        shootClip = shootClips[Random.Range(0, shootClips.Length)];
+        if (shootClips.Length > 0)
+        {
+            shootClip = shootClips[Random.Range(0, shootClips.Length)];
+        }
         if (gameObject.transform.parent == null)
         {
             this.enabled = false;
@@ -32,8 +37,16 @@ public class Gun : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = gameObject.GetComponent<AudioSource>();
     }
+    public void Fire()
+    {
+        Invoke("FireWithDelay", fireDelay);
+    }
+    protected virtual void FireWithDelay() { }
 
-    public virtual void Fire(BotRun character) { }
+    public void setCharacter(BotRun character)
+    {
+        this.character = character;
+    }
 
     private void Update()
     {
@@ -42,5 +55,7 @@ public class Gun : MonoBehaviour
             delay -= Time.deltaTime;
         }
     }
+
+
 
 }

@@ -148,8 +148,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 2.4596102, z: 1}
-  m_Center: {x: 0, y: 1.2319981, z: 0}
+  m_Size: {x: 1, y: 2.5, z: 1}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!95 &859583680195195204
 Animator:
   serializedVersion: 4
@@ -204,14 +204,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213e5e6723e6e794fbed584d4bdabd6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
-  point: {x: 0, y: 0, z: 0}
-  anim: {fileID: 0}
   currentState: {fileID: 0}
   MoveState: {fileID: 11400000, guid: 72cae312b53d75142b4b2ce4bdc98d59, type: 2}
   AttackState: {fileID: 11400000, guid: 377321ee2ea92324da4d6c4e7a8f88c0, type: 2}
   DefendState: {fileID: 11400000, guid: 0fd0c871336722244ad408ba8ef1c18a, type: 2}
   Gun: {fileID: 3851380322962551052}
+  speed: 5
   maxhp: 70
   hp: 70
   kills: 0
@@ -226,8 +224,6 @@ MonoBehaviour:
   delayShot: 0
   StayAtPosition: 0
   MovedToPosition: 0
-  AimConstraint: {fileID: 0}
-  rigBuilder: {fileID: 0}
 --- !u!114 &6251824096024569114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1795,6 +1791,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 324b21e5e134d0a4398480908fb1b319, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5847d32e6781b5e40ac9b54f05acb24f, type: 2}
     - target: {fileID: 919132149155446097, guid: 324b21e5e134d0a4398480908fb1b319, type: 3}
       propertyPath: m_Name
       value: helmet

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapWidthX: 70
   MoveStateEnemy: {fileID: 11400000, guid: 7f6c4d7661b66cd47965a7a40d316d7c, type: 2}
-  vavesDelayFloat: 10
-  nextVaveResources: 6
-  currentResources: 6
+  vavesDelayFloat: 5
+  nextVaveResources: 7
+  currentResources: 7
   UnitsList:
   - {fileID: 516984990803186522, guid: 9880c0ce327c4204fbd7c32729ea3920, type: 3}
   - {fileID: 516984990803186522, guid: 9880c0ce327c4204fbd7c32729ea3920, type: 3}

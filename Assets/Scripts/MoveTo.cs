@@ -27,13 +27,10 @@ public class MoveTo : State
             {
                 movePoint = stand.transform;
                 character.currentPositionGameObject = stand;
+                break;
             }
         }
-        if (character.currentPositionGameObject != null)
-        {
-            gameManagerStatic.SetPosition(character.currentPositionGameObject, true, character.gameObject);
-        }
-        else if (character.currentPositionGameObject == null)
+        if (character.currentPositionGameObject == null)
         {
             movePoint = new GameObject().transform;
             movePoint.transform.parent = character.transform;
@@ -50,6 +47,11 @@ public class MoveTo : State
         {
             character.MovedToPosition = true;
             character.SetState(character.DefendState);
+
+            if (character.CompareTag("bot_ally"))
+            {
+                gameManagerStatic.turnButtons(character.currentPositionGameObject);
+            }
         }
     }
 

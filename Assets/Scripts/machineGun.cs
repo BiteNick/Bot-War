@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class machineGun : Gun
 {
-    override public void Fire(BotRun character)
+    override protected void FireWithDelay()
     {
         if (delay <= 0)
         {
@@ -12,7 +12,15 @@ public class machineGun : Gun
             Ray ray = new Ray(SpawnBulletPos.position, SpawnBulletPos.transform.forward);
 
             Vector3 targetPoint;
-            ray.direction = Quaternion.Euler(0, Random.Range(-spread + character.spreadDebuff, spread - character.spreadDebuff), 0) * transform.forward;
+            if (spread - character.spreadDebuff > 0)
+            {
+                ray.direction = Quaternion.Euler(0, Random.Range(-spread + character.spreadDebuff, spread - character.spreadDebuff), 0) * transform.forward;
+            }
+            else
+            {
+                ray.direction = Quaternion.Euler(0, 0, 0) * transform.forward;
+            }
+
             if (Physics.Raycast(ray, out hit))
             {
                 targetPoint = hit.point;

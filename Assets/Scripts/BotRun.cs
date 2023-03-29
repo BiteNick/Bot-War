@@ -36,11 +36,16 @@ public class BotRun : MonoBehaviour
     public bool MovedToPosition = false; //дошёл ли до позиции
     private MultiAimConstraint AimConstraint;
     private RigBuilder rigBuilder;
-    WaitForSeconds delayDetector;
-    WaitForSeconds delayPositionChange;
+    private WaitForSeconds delayDetector;
+    private WaitForSeconds delayPositionChange;
+    private BoxCollider _collider;
+    private Vector3 standartSizeCollider = new Vector3(1f, 2.5f, 1f);
+    private Vector3 standartCenterCollider = new Vector3(0, 1.25f, 0);
 
     void Start()
     {
+        Gun.setCharacter(this);
+        _collider = GetComponent<BoxCollider>();
         if (currentPositionGameObject != null)
         {
             gameManagerStatic.SetPosition(currentPositionGameObject, true, gameObject);
@@ -89,25 +94,26 @@ public class BotRun : MonoBehaviour
 
     public void SetState(State state)
     {
+        SetColliderSize(standartSizeCollider, standartCenterCollider);
         State newState = Instantiate(state);
         newState.preInit();
-        state.preInit();
-        
         spreadDebuff = 0;
-        if (currentState != null && currentState.StateName != state.StateName)
+        if (newState.StateName == "MoveState" && currentPositionGameObject != null)
         {
-
-            if (state.StateName == "MoveState" && currentPositionGameObject != null)
-            {
-                gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject); //обнуление позиции персов при изменении состояния
-                currentPositionGameObject = null;
-            }
+            gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject); //обнуление позиции перса при изменении состояния на бег
+            currentPositionGameObject = null;
         }
+        
         agent.isStopped = true;
         SetTarget(attackPosition);
         currentState = newState;
         currentState.character = this;
         currentState.Init();
+
+        if (currentPositionGameObject != null)
+        {
+            gameManagerStatic.SetPosition(currentPositionGameObject, true, gameObject);
+        }
     }
 
 
@@ -120,6 +126,10 @@ public class BotRun : MonoBehaviour
             if (currentPositionGameObject != null)
             {
                 gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject);
+                if (currentPositionGameObject != null)
+                {
+                    gameManagerStatic.turnOffButtons(currentPositionGameObject);
+                }
             }
             Destroy(gameObject);
             return true;
@@ -137,6 +147,14 @@ public class BotRun : MonoBehaviour
         }
         return false;
     }
+
+
+    public void SetColliderSize(Vector3 size, Vector3 center)
+    {
+        _collider.size = size;
+        _collider.center = center;
+    }
+
 
     public void animSetBool(string animBool)
     {
@@ -193,6 +211,8 @@ public class BotRun : MonoBehaviour
                 {
                     if (item.CompareTag(EnemiesTag))
                     {
+                        target = item.gameObject;
+                        targetScript = target.GetComponent<BotRun>();
                         RaycastHit hit;
                         Vector3 markerItemPosition;
                         if (targetScript != null && targetScript.currentState != null && targetScript.currentState.StateName == "SitDefendingState")
@@ -207,8 +227,7 @@ public class BotRun : MonoBehaviour
                         Ray ray = new Ray(Gun.SpawnBulletPos.position, heading / heading.magnitude);
                         if (Physics.Raycast(ray, out hit) && hit.transform.CompareTag(EnemiesTag))
                         {
-                            target = item.gameObject;
-                            targetScript = target.GetComponent<BotRun>();
+                            
                             if (currentState.StateName == "MoveState" && (agent.destination - transform.position).magnitude > 15f)
                             {
                                 TakeDamage(0); //ChangeState (takeDamage для перенаправления в правильную позицию)
