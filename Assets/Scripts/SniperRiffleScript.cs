@@ -31,6 +31,7 @@ public class SniperRiffleScript : Gun
                     if (botRun.TakeDamage(damage)) //Проверка на убийство врага
                     {
                         character.kill();
+                        character.target = null;
                     }
 
                 }

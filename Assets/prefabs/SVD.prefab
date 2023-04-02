@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8206372041245559186}
   - component: {fileID: 3364611688971174287}
   m_Layer: 0
-  m_Name: Cube.002
+  m_Name: Shutter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1306859332433800274}
   - component: {fileID: 7432320682920423565}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Basis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.13
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -345,12 +345,13 @@ MonoBehaviour:
   robotParticleEffect: {fileID: 1719820546285081969, guid: 5d3dc86d43521844c96ae4c2c9e5e951, type: 3}
   muzzleFlash: {fileID: 482684462792819471, guid: c4b2a295d40a70c4d855aa7a7df596cd, type: 3}
   sparksEffect: {fileID: 8292743840106945021, guid: e3425af96ed1c1a43988d91239fe250a, type: 3}
+  MagazinObject: {fileID: 8632905016275729197}
   SpawnBulletPos: {fileID: 6351390337341782101}
   fireDistance: 60
-  spread: 2
+  spread: 1
   damage: 40
   FireRate: 3
-  fireDelay: 0.3
+  fireDelay: 0.4
 --- !u!1 &6351390337341782098
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,8 +394,10 @@ GameObject:
   - component: {fileID: 855984515696722113}
   - component: {fileID: 8051230377851292982}
   - component: {fileID: 6854965743300090540}
+  - component: {fileID: 4695887608526287007}
+  - component: {fileID: 1512874629949026723}
   m_Layer: 0
-  m_Name: "\u041A\u0443\u0431"
+  m_Name: Magazin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -465,3 +468,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4695887608526287007
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632905016275729197}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.004439397, y: 0.005623971, z: 0.0062506706}
+  m_Center: {x: 0, y: 0.00030839271, z: -0.00046610401}
+--- !u!54 &1512874629949026723
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632905016275729197}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

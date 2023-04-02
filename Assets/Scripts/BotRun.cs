@@ -25,8 +25,8 @@ public class BotRun : MonoBehaviour
     [SerializeField] private string EnemiesTag; //враги относительно этого объекта
     [SerializeField] private Collider[] enemiesCollisions;
     [SerializeField] public GameObject target;
-    private float timeToKillTargetMax = 5f;
-    private float timeToKillTarget;
+    private float timeToKillTargetMax = 1.5f;
+    [SerializeField] private float timeToKillTarget;
     [SerializeField] private BotRun targetScript;
     [SerializeField] public Transform attackPosition; //маркер для стрельбы по врагам
     private float markerOffsetYSit = 1.6f; //отклонение маркера по высоте, если цель сидит
@@ -37,10 +37,11 @@ public class BotRun : MonoBehaviour
     private MultiAimConstraint AimConstraint;
     private RigBuilder rigBuilder;
     private WaitForSeconds delayDetector;
-    private WaitForSeconds delayPositionChange;
     private BoxCollider _collider;
     private Vector3 standartSizeCollider = new Vector3(1f, 2.5f, 1f);
     private Vector3 standartCenterCollider = new Vector3(0, 1.25f, 0);
+    [SerializeField] private Collider[] ragdollColliders;
+    [SerializeField] private Rigidbody[] ragdollRigidbodies;
 
     void Start()
     {
@@ -56,7 +57,6 @@ public class BotRun : MonoBehaviour
         agent.speed = speed;
         anim = gameObject.GetComponent<Animator>();
         delayDetector = new WaitForSeconds(0.5f);
-        delayPositionChange = new WaitForSeconds(0.1f);
         delayShot = Gun.FireRate;
 
         AimConstraint = transform.Find("Rig1/constraint").GetComponent<MultiAimConstraint>();
@@ -82,7 +82,8 @@ public class BotRun : MonoBehaviour
         }
         StartCoroutine("DetectEnemies");
         StartCoroutine("attackPositionChange");
-        
+
+        RagdollSwitch(false);
 
     }
 
@@ -103,7 +104,7 @@ public class BotRun : MonoBehaviour
             gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject); //обнуление позиции перса при изменении состояния на бег
             currentPositionGameObject = null;
         }
-        
+
         agent.isStopped = true;
         SetTarget(attackPosition);
         currentState = newState;
@@ -131,7 +132,8 @@ public class BotRun : MonoBehaviour
                     gameManagerStatic.turnOffButtons(currentPositionGameObject);
                 }
             }
-            Destroy(gameObject);
+            RagdollSwitch(true);
+            Destroy(gameObject, 5f);
             return true;
         }
         if (!StayAtPosition && currentState.StateName != "SitDefendingState" && (agent.destination - transform.position).magnitude > 10f)
@@ -163,6 +165,12 @@ public class BotRun : MonoBehaviour
             anim.SetBool(parameter.name, false);
         }
         anim.SetBool(animBool, true);
+    }
+
+
+    public void animSetTrigger(string trigger)
+    {
+        anim.SetTrigger(trigger);
     }
 
     public void setMovePosition(Vector3 movePoint)
@@ -203,14 +211,15 @@ public class BotRun : MonoBehaviour
     {
         while (true)
         {
-            if (target == null || timeToKillTarget < 0f)
+            if (target == null || targetScript.enabled == false || timeToKillTarget <= 0f )
             {
-                timeToKillTarget = timeToKillTargetMax;
+                target = null; //чтобы не пинали убитого противника
                 enemiesCollisions = Physics.OverlapSphere(transform.position, distance);
                 foreach (var item in enemiesCollisions)
                 {
                     if (item.CompareTag(EnemiesTag))
                     {
+                        timeToKillTarget = timeToKillTargetMax;
                         target = item.gameObject;
                         targetScript = target.GetComponent<BotRun>();
                         RaycastHit hit;
@@ -227,7 +236,7 @@ public class BotRun : MonoBehaviour
                         Ray ray = new Ray(Gun.SpawnBulletPos.position, heading / heading.magnitude);
                         if (Physics.Raycast(ray, out hit) && hit.transform.CompareTag(EnemiesTag))
                         {
-                            
+
                             if (currentState.StateName == "MoveState" && (agent.destination - transform.position).magnitude > 15f)
                             {
                                 TakeDamage(0); //ChangeState (takeDamage для перенаправления в правильную позицию)
@@ -237,29 +246,46 @@ public class BotRun : MonoBehaviour
                     }
                 }
             }
+            attackPositionChange();
             yield return delayDetector;
         }
     }
-    
 
-    IEnumerator attackPositionChange()
+
+    private void attackPositionChange()
     {
-        while (true)
+        if (target != null)
         {
-            if (target != null)
+            attackPosition.position = target.transform.position;
+            if (targetScript.currentState != null && targetScript.currentState.StateName == "SitDefendingState")
             {
-                attackPosition.position = target.transform.position;
-                if (targetScript.currentState != null && targetScript.currentState.StateName == "SitDefendingState")
-                {
-                    attackPosition.position += new Vector3(0f, markerOffsetYSit, 0f);
-                }
-                else
-                {
-                    attackPosition.position += new Vector3(0f, markerOffsetYStay, 0f);
-                }
+                attackPosition.position += new Vector3(0f, markerOffsetYSit, 0f);
             }
-            yield return delayPositionChange;
+            else
+            {
+                attackPosition.position += new Vector3(0f, markerOffsetYStay, 0f);
+            }
         }
+    }
+
+
+    private void RagdollSwitch(bool state) //если true, то объект становится динамичным (включается ragdoll)
+    {
+        anim.enabled = !state; //аниматор вырубается, если подаётся true
+        foreach (Collider collider in ragdollColliders)
+        {
+            collider.enabled = state;
+        }
+        foreach (Rigidbody rbItem in ragdollRigidbodies)
+        {
+            rbItem.isKinematic = !state; //потому что если isKinematic true, то он делает физику объекта статичной
+        }
+
+        Gun.GetComponent<BoxCollider>().enabled = state;
+        _collider.enabled = !state; //выключение основного кубического коллайдера, если true
+        agent.enabled = !state; //выключение NavMeshAgent, если true
+        rigBuilder.enabled = !state; //выключение RigBuilder, если true
+        this.enabled = !state; //выключение данного скрипта, если true
     }
 
 

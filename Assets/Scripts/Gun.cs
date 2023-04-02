@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour
     [SerializeField] protected GameObject robotParticleEffect;
     [SerializeField] protected GameObject muzzleFlash;
     [SerializeField] protected GameObject sparksEffect;
+    [SerializeField] public GameObject MagazinObject;
     [SerializeField] public Transform SpawnBulletPos;
     [SerializeField] protected float fireDistance; //дальность стрельбы
     [SerializeField] protected float spread; //дефолтный разброс

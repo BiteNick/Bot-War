@@ -30,6 +30,7 @@ public class machineGun : Gun
                     if (botRun.TakeDamage(damage)) //Проверка на убийство врага
                     {
                         character.kill();
+                        character.target = null;
                     }
 
                 }
