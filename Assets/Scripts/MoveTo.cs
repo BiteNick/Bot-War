@@ -18,8 +18,9 @@ public class MoveTo : State
     public override void Init()
     {
         character.MovedToPosition = false;
-        character.ClearTarget();
+        character.EnableRigBuilder(false);
         character.animSetBool("isRunning");
+        character.animSetLegsState(0);
 
         foreach (GameObject stand in gameManagerStatic.Positions.Keys)
         {

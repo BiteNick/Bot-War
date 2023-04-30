@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 3874580346133736740}
   - component: {fileID: 6251824096024569114}
   - component: {fileID: 7252342208130511463}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AllyBotSniper
   m_TagString: bot_ally
   m_Icon: {fileID: 0}
@@ -335,19 +335,26 @@ MonoBehaviour:
   MoveState: {fileID: 11400000, guid: 72cae312b53d75142b4b2ce4bdc98d59, type: 2}
   AttackState: {fileID: 11400000, guid: 377321ee2ea92324da4d6c4e7a8f88c0, type: 2}
   DefendState: {fileID: 11400000, guid: 0fd0c871336722244ad408ba8ef1c18a, type: 2}
+  ReloadState: {fileID: 11400000, guid: 796f9023ae093844185a4b29f16bda13, type: 2}
+  shotGunDeployState: {fileID: 0}
+  GrenadeThrowState: {fileID: 11400000, guid: 455a18bfb7767ce4d86f249479f66194, type: 2}
   Gun: {fileID: 3390318707610698278}
   speed: 5.5
   maxhp: 50
   hp: 50
+  hpIncrement: 8
   kills: 0
   spreadDebuff: 0
   distance: 60
   currentPositionGameObject: {fileID: 0}
   EnemiesTag: 
+  looseTriggerTag: 
   enemiesCollisions: []
   target: {fileID: 0}
+  timeToKillTarget: 0
   targetScript: {fileID: 0}
   attackPosition: {fileID: 7878174504282896108}
+  AngleInDegrees: 170
   delayShot: 0
   StayAtPosition: 0
   MovedToPosition: 0
@@ -375,6 +382,10 @@ MonoBehaviour:
   - {fileID: 7329604221994524016}
   - {fileID: 6358717524268372662}
   - {fileID: 6174128830907779010}
+  Hat: {fileID: 6034221301674740816}
+  grenadeObject: {fileID: 0}
+  currentGrenade: {fileID: 0}
+  grenadeMarker: {fileID: 0}
 --- !u!114 &6251824096024569114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1995,7 +2006,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2274090305892019849, guid: 54cca8d34ca45c7408bd5a1e29dad080, type: 3}
+  - {fileID: 2100000, guid: 0c35fd825abbfc547aa38779a1695166, type: 2}
   - {fileID: 2100000, guid: 2d02e86205afeed4fb52191fc5d80c90, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -2538,6 +2549,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d403c1ef0640584395baa3dd0eb538b, type: 3}
+--- !u!1 &6034221301674740816 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4575079685775525220, guid: 7d403c1ef0640584395baa3dd0eb538b, type: 3}
+  m_PrefabInstance: {fileID: 7836314966925412660}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6410325280197138154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3762231993437380574, guid: 7d403c1ef0640584395baa3dd0eb538b, type: 3}

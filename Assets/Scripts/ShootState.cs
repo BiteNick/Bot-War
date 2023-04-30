@@ -18,9 +18,19 @@ public class ShootState : State
 
     override public void Init()
     {
+        character.animSetLegsState(1);
+
+        if (character.Gun.firstContact && character.shotGunDeployState != null)
+        {
+            character.SetState(character.shotGunDeployState);
+            return;
+        }
+
+
         timerToMoveState = timerToMoveStateMax;
         delayShootSample = character.delayShot;
         character.animSetBool("isShooting");
+        character.EnableRigBuilder(true);
 
     }
 

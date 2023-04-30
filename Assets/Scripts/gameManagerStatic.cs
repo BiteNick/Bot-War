@@ -4,10 +4,18 @@ using UnityEngine;
 
 public static class gameManagerStatic
 {
-    public static Dictionary<GameObject, bool> Positions = new Dictionary<GameObject, bool>(); //engaged positions (true - if engaged, false - if empty)
-    private static Dictionary<GameObject, List<GameObject>> positionsGroups = new Dictionary<GameObject, List<GameObject>>();
+    public static float Volume = 0.7f;
+    public static float CameraMaxKeysMovingSpeed = 8f;
+    public static float CameraKeysMovingSpeed = 4f;
+    public static float CameraMaxMoveSpeed = 8f;
+    public static float CameraMoveSpeed = 4f;
+    public static Dictionary<GameObject, bool> Positions; //engaged positions (true - if engaged, false - if empty)
+    private static Dictionary<GameObject, List<GameObject>> positionsGroups;
     public static void StartManager()
     {
+        Positions = new Dictionary<GameObject, bool>();
+        positionsGroups = new Dictionary<GameObject, List<GameObject>>();
+
         foreach (GameObject positionsGroup in GameObject.FindGameObjectsWithTag("positionsGroup"))
         {
             positionsGroups[positionsGroup] = new List<GameObject>();
@@ -24,8 +32,9 @@ public static class gameManagerStatic
         {
             Positions.Add(child, false);
         }
-        turnButtons();
+            turnButtons();
     }
+
 
     public static void SetPosition(GameObject stand, bool boolValue, GameObject character)
     {
@@ -121,9 +130,6 @@ public static class gameManagerStatic
         }
     }
 
-
-
-
     public static void Temp()
     {
         foreach (var temp in Positions.Keys)
@@ -132,4 +138,8 @@ public static class gameManagerStatic
             Debug.Log($"name: {temp.name}, bool: {Positions[temp]}");
         }
     }
+
+    
+
+
 }

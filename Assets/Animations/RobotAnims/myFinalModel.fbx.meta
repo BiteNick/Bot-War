@@ -1,17 +1,26 @@
 fileFormatVersion: 2
-guid: dfec765295fe5d340a576ca452105646
+guid: 80119a670c8075e42b6a6dac79376cca
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
-  - first:
-      74: -3584619823844665163
-    second: metarig|Action
   - first:
       74: -1610877696525190606
     second: metarig|AimmingWithGun
   - first:
       74: 6858606714952056678
     second: metarig|AimWithGun
+  - first:
+      74: 9047546485250775611
+    second: metarig|Cube|Cube|Action
+  - first:
+      74: 3246204528447516542
+    second: metarig|Cube|Cube|idle
+  - first:
+      74: 1773892991991674111
+    second: metarig|Cube|Cube|Unwrapped
+  - first:
+      74: 917240531940692800
+    second: metarig|Cube|Cube|Unwrapping
   - first:
       74: -4158892538556607495
     second: metarig|Idle.001
@@ -25,14 +34,26 @@ ModelImporter:
       74: 3688439386925517810
     second: metarig|RunWithGun
   - first:
-      74: -7657334312053111342
-    second: metarig|RunWithGun.001
-  - first:
       74: -7940115719069081937
     second: metarig|sittingWithGun
   - first:
       74: 8077332851192881893
     second: metarig|sitWithGun
+  - first:
+      74: 8855583545111657452
+    second: metarig|spasUnwrap
+  - first:
+      74: 968771965690491513
+    second: "metarig|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|Action"
+  - first:
+      74: -6054699705687607071
+    second: "metarig|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|idle"
+  - first:
+      74: 7594724337672334791
+    second: "metarig|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|Unwrapped"
+  - first:
+      74: 1729745526633040656
+    second: "metarig|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|\u041F\u043B\u043E\u0441\u043A\u043E\u0441\u0442\u044C|Unwrapping"
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -65,7 +86,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.05
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -118,7 +139,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.0005
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

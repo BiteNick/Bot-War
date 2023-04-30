@@ -33,8 +33,11 @@ public class levelWaves : ScriptableObject
         while (currentResources >= minimalUnitCost)
         {
             int currentUnitSpawn = Random.Range(0, UnitsList.Count);
-            Instantiate(UnitsList[currentUnitSpawn], new Vector3(Random.Range(5, mapWidthX - 5), 0f, MoveStateEnemy.mapBeginningZ - 5), Quaternion.identity);
-            currentResources -= UnitsCost[currentUnitSpawn];
+            if (UnitsCost[currentUnitSpawn] <= currentResources)
+            {
+                Instantiate(UnitsList[currentUnitSpawn], new Vector3(Random.Range(5, mapWidthX - 5), 0f, MoveStateEnemy.mapBeginningZ - 5), Quaternion.identity);
+                currentResources -= UnitsCost[currentUnitSpawn];
+            }
         }
         currentResources += nextVaveResources;
     }

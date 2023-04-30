@@ -20,11 +20,20 @@ public class SitDefendingState : State
 
     public override void Init()
     {
+        character.animSetLegsState(2);
+        if (character.Gun.firstContact && character.shotGunDeployState != null)
+        {
+            character.SetState(character.shotGunDeployState);
+            return;
+        }
+
+
         character.SetColliderSize(sitColliderSize, sitColliderCenter);
         timerToMoveState = timerToMoveStateMax;
-        character.animSetBool("isSitting");
+        character.animSetBool("isShooting");
         delayShootSample = character.delayShot;
         character.spreadDebuff = 2;
+        character.EnableRigBuilder(true);
     }
 
     public override void Run()

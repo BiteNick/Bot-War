@@ -7,6 +7,7 @@ public class CameraMove : MonoBehaviour
 {
     [SerializeField]private CinemachineVirtualCamera cinemachineVirtualCamera;
     private bool dragPanMoveActive;
+    private bool keyboardMoving = false;
     private Vector2 lastMousePosition;
     private Vector3 inputDir = new Vector3(0, 0, 0);
     private Vector3 moveDir;
@@ -19,28 +20,59 @@ public class CameraMove : MonoBehaviour
     private float followOffsetMaxX = 28f;
     private float followOffsetMinY = -10f;
     private float followOffsetMaxY = 1f;
-    private float KeysMovingSpeed = 3f;
-    [SerializeField]private float moveSpeed;
+    private const float maxKeysMovingSpeed = 8f;
+    private const float maxMoveSpeed = 8f;
+    [SerializeField, Range(1, 8)] private float KeysMovingSpeed;
+    [SerializeField, Range(1, 8)] private float moveSpeed;
     [SerializeField] private float minPositionX;
     [SerializeField] private float maxPositionX;
     [SerializeField] private float minPositionZ;
     [SerializeField] private float maxPositionZ;
 
-
+    private CinemachineTransposer CinemachineCameraTransposer;
 
     private void Awake()
     {
         followOffset = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
+        CinemachineCameraTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+        gameManagerStatic.CameraMaxKeysMovingSpeed = maxKeysMovingSpeed;
+        gameManagerStatic.CameraMaxMoveSpeed = maxMoveSpeed;
+        KeysMovingSpeed = gameManagerStatic.CameraKeysMovingSpeed;
+        moveSpeed = gameManagerStatic.CameraMoveSpeed;
+
     }
 
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartGameScript gameManagerScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<StartGameScript>();
+            gameManagerScript.PauseSwitcer();
+        }
+
         inputDir = new Vector3(0, 0, 0);
-        if (Input.GetKey(KeyCode.W)) inputDir.z = KeysMovingSpeed;
-        else if (Input.GetKey(KeyCode.S)) inputDir.z = -KeysMovingSpeed;
-        if (Input.GetKey(KeyCode.A)) inputDir.x = KeysMovingSpeed;
-        else if (Input.GetKey(KeyCode.D)) inputDir.x = -KeysMovingSpeed;
+        if (Input.GetKey(KeyCode.W))
+        {
+            inputDir.z = KeysMovingSpeed;
+            keyboardMoving = true;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            inputDir.z = -KeysMovingSpeed;
+            keyboardMoving = true;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            inputDir.x = KeysMovingSpeed;
+            keyboardMoving = true;
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            inputDir.x = -KeysMovingSpeed;
+            keyboardMoving = true;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -63,8 +95,15 @@ public class CameraMove : MonoBehaviour
         }
 
         moveDir = transform.right * inputDir.z + transform.forward * inputDir.x;
-        
-        nextFramePosition = transform.position - moveDir * moveSpeed * Time.deltaTime;
+
+
+        if (keyboardMoving)
+        {
+            nextFramePosition = transform.position - moveDir * KeysMovingSpeed * Time.deltaTime;
+            keyboardMoving = false;
+        }
+        else
+            nextFramePosition = transform.position - moveDir * moveSpeed * Time.deltaTime;
 
         if (nextFramePosition.x > minPositionX && nextFramePosition.x < maxPositionX && nextFramePosition.z > minPositionZ && nextFramePosition.z < maxPositionZ)
         {
@@ -96,8 +135,8 @@ public class CameraMove : MonoBehaviour
             followOffset = zoomDir * followOffsetMaxX;
         }
 
-        cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x = 
-            Vector3.Lerp(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed).x;
+        CinemachineCameraTransposer.m_FollowOffset.x = 
+            Vector3.Lerp(CinemachineCameraTransposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed).x;
 
     }
 
@@ -115,12 +154,20 @@ public class CameraMove : MonoBehaviour
 
         followOffset.y = Mathf.Clamp(followOffset.y, followOffsetMinY, followOffsetMaxY);
 
-        cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y =
-            Vector3.Lerp(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed).y;
+        CinemachineCameraTransposer.m_FollowOffset.y =
+            Vector3.Lerp(CinemachineCameraTransposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed).y;
 
     }
 
+    public void SetKeysMovingSpeed(float speed)
+    {
+        KeysMovingSpeed = speed * maxKeysMovingSpeed;
+        gameManagerStatic.CameraKeysMovingSpeed = KeysMovingSpeed;
+    }
 
-
-
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = speed * maxMoveSpeed;
+        gameManagerStatic.CameraMoveSpeed = moveSpeed;
+    }
 }
