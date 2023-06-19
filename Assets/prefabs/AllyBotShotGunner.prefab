@@ -273,21 +273,23 @@ MonoBehaviour:
   DefendState: {fileID: 11400000, guid: 0fd0c871336722244ad408ba8ef1c18a, type: 2}
   ReloadState: {fileID: 11400000, guid: 796f9023ae093844185a4b29f16bda13, type: 2}
   shotGunDeployState: {fileID: 11400000, guid: 00fae9eb950fbdf429484a3386cea563, type: 2}
-  GrenadeThrowState: {fileID: 0}
+  GrenadeThrowState: {fileID: 11400000, guid: 455a18bfb7767ce4d86f249479f66194, type: 2}
   Gun: {fileID: 4296097662972143245}
   speed: 8.5
   maxhp: 100
   hp: 50
   hpIncrement: 10
   kills: 0
+  spreadDefuffDefault: 0
   spreadDebuff: 0
   distance: 40
+  grenadeThrowChancePercents: 12
   currentPositionGameObject: {fileID: 0}
   EnemiesTag: 
   looseTriggerTag: 
   enemiesCollisions: []
   target: {fileID: 0}
-  timeToKillTarget: 0
+  timeToThrowGrenadeMax: 15
   targetScript: {fileID: 0}
   attackPosition: {fileID: 7878174504282896108}
   AngleInDegrees: 35
@@ -319,9 +321,14 @@ MonoBehaviour:
   - {fileID: 3507979117413317479}
   - {fileID: 3599214591545844283}
   Hat: {fileID: 0}
-  grenadeObject: {fileID: 0}
+  grenadeObject: {fileID: 1449449756425505030, guid: a55aacfa8b8c8904d9009588ee7bf250, type: 3}
   currentGrenade: {fileID: 0}
   grenadeMarker: {fileID: 5408695012334735666}
+  skipPosition: 0
+  materialBlink: {fileID: 0}
+  healthUpAnim: {fileID: 6375182576276602319, guid: f7452e9ff5ce01d4ba0ad0e18b37f0ca, type: 3}
+  healthUpParticle: {fileID: 9008536704942646867, guid: 9c1eda232b34f63419f29d72758c6eba, type: 3}
+  blindSprite: {fileID: 6375182576276602319, guid: d114be736863d644aafed99bc256b13b, type: 3}
 --- !u!114 &6251824096024569114
 MonoBehaviour:
   m_ObjectHideFlags: 0

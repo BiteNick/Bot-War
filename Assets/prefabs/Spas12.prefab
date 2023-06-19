@@ -228,7 +228,7 @@ MonoBehaviour:
   fireDistance: 30
   spread: 10
   damage: 20
-  FireRate: 1
+  FireRate: 0.7
   magazineCapacity: 8
   magazineAmmos: 0
   fireDelay: 0.25

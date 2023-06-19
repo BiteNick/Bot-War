@@ -581,6 +581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Magazine
       objectReference: {fileID: 0}
+    - target: {fileID: 2122437888438974246, guid: 01a65fedcd57cc7489647d4101fb5418, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2956638706321611708, guid: 01a65fedcd57cc7489647d4101fb5418, type: 3}
       propertyPath: m_RootOrder
       value: 1

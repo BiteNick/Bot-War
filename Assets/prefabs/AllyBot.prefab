@@ -280,14 +280,16 @@ MonoBehaviour:
   hp: 50
   hpIncrement: 10
   kills: 0
+  spreadDefuffDefault: 0
   spreadDebuff: 0
   distance: 40
+  grenadeThrowChancePercents: 12
   currentPositionGameObject: {fileID: 0}
   EnemiesTag: 
   looseTriggerTag: 
   enemiesCollisions: []
   target: {fileID: 0}
-  timeToKillTarget: 0
+  timeToThrowGrenadeMax: 15
   targetScript: {fileID: 0}
   attackPosition: {fileID: 7878174504282896108}
   AngleInDegrees: 35
@@ -322,6 +324,11 @@ MonoBehaviour:
   grenadeObject: {fileID: 4045640983353998262, guid: 7aabc2e1c3813b14c8923fe5042281fc, type: 3}
   currentGrenade: {fileID: 0}
   grenadeMarker: {fileID: 5408695012334735666}
+  skipPosition: 0
+  materialBlink: {fileID: 0}
+  healthUpAnim: {fileID: 6375182576276602319, guid: f7452e9ff5ce01d4ba0ad0e18b37f0ca, type: 3}
+  healthUpParticle: {fileID: 9008536704942646867, guid: 9c1eda232b34f63419f29d72758c6eba, type: 3}
+  blindSprite: {fileID: 6375182576276602319, guid: d114be736863d644aafed99bc256b13b, type: 3}
 --- !u!114 &6251824096024569114
 MonoBehaviour:
   m_ObjectHideFlags: 0

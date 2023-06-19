@@ -8,7 +8,8 @@ public class MoveTo : State
     private Transform movePoint;
     public float mapBeginningZ;
     public float mapEndingZ;
-    public float nonShelterRunDistance = 10f; //рассто€ние от которого персонаж может бежать до близжайшего укрыти€
+    public float nonShelterRunDistance = 10f; //рассто€ние от которого персонаж может бежать до ближайшего укрыти€
+    private float leftDistance; //calculates every frame
 
     public override void preInit()
     {
@@ -17,6 +18,16 @@ public class MoveTo : State
 
     public override void Init()
     {
+        if (character.skipPosition)
+        {
+            character.skipPosition = false;
+        }
+        else if(character.currentPositionGameObject != null && character.MovedToPosition)
+        {
+            gameManagerStatic.SetPosition(character.currentPositionGameObject, false, character.gameObject);
+        }
+
+        character.currentPositionGameObject = null;
         character.MovedToPosition = false;
         character.EnableRigBuilder(false);
         character.animSetBool("isRunning");
@@ -31,6 +42,7 @@ public class MoveTo : State
                 break;
             }
         }
+
         if (character.currentPositionGameObject == null)
         {
             movePoint = new GameObject().transform;
@@ -44,14 +56,57 @@ public class MoveTo : State
 
     public override void Run()
     {
-        if ((character.transform.position - movePoint.position).magnitude < 1f)
+        leftDistance = (character.transform.position - movePoint.position).magnitude;
+        if (leftDistance < 1f)
         {
-            character.MovedToPosition = true;
-            character.SetState(character.DefendState);
+            
 
-            if (character.CompareTag("bot_ally"))
+            if (gameManagerStatic.Positions[character.currentPositionGameObject] == true)
             {
-                gameManagerStatic.turnButtons(character.currentPositionGameObject);
+                foreach (GameObject stand in gameManagerStatic.positionsGroups[character.currentPositionGameObject.transform.parent.gameObject])
+                {
+                    if (gameManagerStatic.Positions[stand] == false)
+                    {
+                        character.currentPositionGameObject = stand;
+                        character.setMovePosition(stand.transform.position);
+                        movePoint = stand.transform;
+                        character.skipPosition = true;
+                        return;
+                    }
+                }
+
+                character.currentPositionGameObject = null;
+                character.skipPosition = true;
+                character.SetState(character.MoveState);
+            }
+
+            else
+            {
+                if (character.CompareTag("bot_ally"))
+                {
+                    gameManagerStatic.SetPosition(character.currentPositionGameObject, true, character.gameObject);
+                    gameManagerStatic.turnButtons(character.currentPositionGameObject);
+                }
+                character.MovedToPosition = true;
+                character.SetState(character.DefendState);
+            }
+
+        }
+
+        else if (leftDistance < 5f)
+        {
+            if (gameManagerStatic.Positions[character.currentPositionGameObject] == true)
+            {
+                foreach (GameObject stand in gameManagerStatic.positionsGroups[character.currentPositionGameObject.transform.parent.gameObject])
+                {
+                    if (gameManagerStatic.Positions[stand] == false)
+                    {
+                        character.currentPositionGameObject = stand;
+                        character.setMovePosition(stand.transform.position);
+                        movePoint = stand.transform;
+                        return;
+                    }
+                }
             }
         }
     }

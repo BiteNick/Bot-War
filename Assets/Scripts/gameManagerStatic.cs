@@ -9,14 +9,34 @@ public static class gameManagerStatic
     public static float CameraKeysMovingSpeed = 4f;
     public static float CameraMaxMoveSpeed = 8f;
     public static float CameraMoveSpeed = 4f;
+    public static float CameraMaxScrollSpeed = 4f;
+    public static float CameraScrollSpeed = 2f;
     public static Dictionary<GameObject, bool> Positions; //engaged positions (true - if engaged, false - if empty)
-    private static Dictionary<GameObject, List<GameObject>> positionsGroups;
+    public static Dictionary<GameObject, List<GameObject>> positionsGroups;
     public static void StartManager()
     {
         Positions = new Dictionary<GameObject, bool>();
+
+
+        List<GameObject> positionsGroupAlly = new List<GameObject>();
+        positionsGroupAlly.AddRange(GameObject.FindGameObjectsWithTag("positionsGroupAlly"));
+
+        List<GameObject> positionsGroupEnemy = new List<GameObject>();
+        positionsGroupEnemy.AddRange(GameObject.FindGameObjectsWithTag("positionsGroupEnemy"));
+
+        List<GameObject> positionsGroupCommon = new List<GameObject>();
+        positionsGroupCommon.AddRange(GameObject.FindGameObjectsWithTag("positionsGroup"));
+
+        List<GameObject> allPositionsGroup = new List<GameObject>();
+        allPositionsGroup.AddRange(positionsGroupAlly);
+        allPositionsGroup.AddRange(positionsGroupEnemy);
+        allPositionsGroup.AddRange(positionsGroupCommon);
+
+
         positionsGroups = new Dictionary<GameObject, List<GameObject>>();
 
-        foreach (GameObject positionsGroup in GameObject.FindGameObjectsWithTag("positionsGroup"))
+
+        foreach (GameObject positionsGroup in allPositionsGroup)
         {
             positionsGroups[positionsGroup] = new List<GameObject>();
             foreach (Transform position in positionsGroup.transform)

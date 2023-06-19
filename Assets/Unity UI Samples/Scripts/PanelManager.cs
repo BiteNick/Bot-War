@@ -17,11 +17,16 @@ public class PanelManager : MonoBehaviour {
 	const string k_ClosedStateName = "Closed";
 
 	[SerializeField] private Slider volumeSettings;
-	[SerializeField] private Slider CameraZoomSlider;
 	[SerializeField] private Slider CameraKeysMovingSlider;
 	[SerializeField] private Slider CameraMouseMovingSlider;
+	[SerializeField] private Slider CameraScrollSlider;
 
-    private void Start()
+	[SerializeField] private Dropdown resolutionDropDown;
+	[SerializeField] private Dropdown graphicsDropdown;
+
+	Resolution[] resolutions;
+
+	private void Start()
     {
 		if (volumeSettings != null)
 			volumeSettings.value = gameManagerStatic.Volume;
@@ -31,6 +36,15 @@ public class PanelManager : MonoBehaviour {
 
 		if (CameraMouseMovingSlider != null)
 			CameraMouseMovingSlider.value = gameManagerStatic.CameraMoveSpeed / gameManagerStatic.CameraMaxMoveSpeed;
+
+		if (CameraScrollSlider != null)
+			CameraScrollSlider.value = gameManagerStatic.CameraScrollSpeed / gameManagerStatic.CameraMaxScrollSpeed;
+
+		if (resolutionDropDown != null)
+			resolutionInit();
+
+		if (graphicsDropdown != null)
+			graphicsDropdown.value = QualitySettings.GetQualityLevel();
 
 	}
 
@@ -132,5 +146,47 @@ public class PanelManager : MonoBehaviour {
 	{
 		gameManagerStatic.CameraMoveSpeed = speed * gameManagerStatic.CameraMaxMoveSpeed;
 	}
+
+	public void SetScrollSpeed(float speed)
+	{
+		gameManagerStatic.CameraScrollSpeed = speed * gameManagerStatic.CameraMaxScrollSpeed;
+	}
+
+	private void resolutionInit()
+    {
+		resolutionDropDown.ClearOptions();
+		resolutions = Screen.resolutions;
+		List<string> options = new List<string>();
+
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+			options.Add($"{resolutions[i].width}x{resolutions[i].height}");
+			if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+			{
+				StartCoroutine(ChangeValue(i));
+			}
+        }
+		resolutionDropDown.AddOptions(options);
+		resolutionDropDown.RefreshShownValue();
+    }
+
+	IEnumerator ChangeValue(int newValue)
+	{
+		resolutionDropDown.Select();
+		yield return new WaitForEndOfFrame();
+		resolutionDropDown.value = newValue;
+		resolutionDropDown.RefreshShownValue();
+	}
+
+	public void SetResolution(int resolutionIndex)
+    {
+		Resolution resolution = resolutions[resolutionIndex];
+		Screen.SetResolution(resolution.width, resolution.height, true);
+    }
+
+	public void SetQuality(int qualityIndex)
+    {
+		QualitySettings.SetQualityLevel(qualityIndex);
+    }
 
 }

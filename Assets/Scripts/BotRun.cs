@@ -23,15 +23,20 @@ public class BotRun : MonoBehaviour
     [SerializeField] private float hp;
     [SerializeField] private float hpIncrement = 10f; //using this variable when upgrading hp
     [SerializeField] private int kills = 0;
-    [SerializeField] public int spreadDebuff = 0; //увеличение точности
-    [SerializeField] private float distance = 40f; //радиус обнаружени€ врагов
+
+    [SerializeField] private int spreadDefuffDefault = 0;
+    [SerializeField] public float spreadDebuff = 0; //увеличение точности (или уменьшение, если отрицательно)
+    private int spreadDebuffSit = 2;
+
+    [SerializeField] private float distance; //radius start attacks
+    [SerializeField] private int grenadeThrowChancePercents = 12;
     [SerializeField] public GameObject currentPositionGameObject; //текущее укрытие объекта
-    [SerializeField] private string EnemiesTag; //враги относительно этого объекта
+    [SerializeField] private string EnemiesTag; //tag of enemies this object
     [SerializeField] private string looseTriggerTag;
     [SerializeField] private Collider[] enemiesCollisions;
     [SerializeField] public GameObject target;
     private float timeToKillTargetMax = 1.5f;
-    [SerializeField] private float timeToKillTarget;
+    private float timeToKillTarget;
     [SerializeField] private float timeToThrowGrenadeMax = 15f;
     private float timeToThrowGrenade = 0f;
     [SerializeField] private BotRun targetScript;
@@ -56,10 +61,23 @@ public class BotRun : MonoBehaviour
     public GameObject currentGrenade;
     private float g = Physics.gravity.y;
     [SerializeField] private Transform grenadeMarker; //where is throwing grenades
+    [HideInInspector] public bool skipPosition = false; // bool for MoveState
 
+    private SkinnedMeshRenderer meshRenderer;
+    private Material[] objMaterials;
+    [SerializeField] private Material materialBlink;
+
+    [SerializeField] private GameObject healthUpAnim;
+    [SerializeField] private GameObject healthUpParticle;
+
+    [SerializeField] private GameObject blindSprite;
+    bool isBlinded = false;
 
     private void Awake()
     {
+        materialBlink = Resources.Load("MaterialBlink", typeof(Material)) as Material;
+        meshRenderer = transform.Find("obj").GetComponent<SkinnedMeshRenderer>();
+        objMaterials = meshRenderer.sharedMaterials;
 
         leftHand = transform.Find("metarig/spine/spine.001/spine.002/spine.003/shoulder.L/upper_arm.L/forearm.L/hand.L/hand.L_end");
         if (gameObject.CompareTag("bot_enemy"))
@@ -100,7 +118,7 @@ public class BotRun : MonoBehaviour
         if (StayAtPosition)
         {
             SetState(AttackState);
-            spreadDebuff = 2;
+            spreadDebuff = spreadDebuffSit;
         }
         else
         {
@@ -123,77 +141,90 @@ public class BotRun : MonoBehaviour
     {
         SetColliderSize(standartSizeCollider, standartCenterCollider);
         State newState = Instantiate(state);
-        newState.preInit();
-        spreadDebuff = 0;
-        if (newState.StateName == "MoveState" && currentPositionGameObject != null)
-        {
-            gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject); //обнуление позиции перса при изменении состо€ни€ на бег
-            currentPositionGameObject = null;
-        }
-
+        spreadDebuff = spreadDefuffDefault;
         StopAgent(true);
+        newState.preInit();
         currentState = newState;
         currentState.character = this;
         currentState.Init();
-
-        if (currentPositionGameObject != null)
-        {
-            gameManagerStatic.SetPosition(currentPositionGameObject, true, gameObject);
-        }
     }
 
 
     public bool TakeDamage(float damage) //returns true if this object killed
     {
         hp -= damage;
+        Invoke("blinkMaterial", 0.2f);
 
         if (hp <= 0)
         {
-            if (currentPositionGameObject != null)
+            if (currentPositionGameObject != null && MovedToPosition)
             {
                 gameManagerStatic.SetPosition(currentPositionGameObject, false, gameObject);
-                if (currentPositionGameObject != null)
-                {
-                    gameManagerStatic.turnOffButtons(currentPositionGameObject);
-                }
+                gameManagerStatic.turnOffButtons(currentPositionGameObject);
             }
+
             RagdollSwitch(true);
+
             if (Hat != null)
             {
                 Hat.GetComponent<BoxCollider>().enabled = true;
                 Hat.GetComponent<Rigidbody>().isKinematic = false;
             }
+
             Destroy(gameObject, 5f);
             return true;
         }
         if (!StayAtPosition && currentState.StateName != "SitDefendingState" && currentState.StateName != "ReloadState" && currentState.StateName != "grenadeThrowState" && (agent.destination - transform.position).magnitude > 10f)
         {
-            
             CheckStayState();
         }
+
+
         return false;
     }
 
-
-    public void IncreaseHp()
+    private void blinkMaterial()
     {
-        maxhp += hpIncrement;
-        hp += hpIncrement;
+        meshRenderer.sharedMaterials = new Material[] { materialBlink, materialBlink };
+        Invoke("returnMaterials", 0.15f);
+    }
+
+    private void returnMaterials()
+    {
+        meshRenderer.sharedMaterials = objMaterials;
+    }
+
+    public void IncreaseHp() //it is doing if object dead
+    {
+        if (hp > 0)
+        {
+            if (healthUpAnim != null)
+            {
+                createEffect(healthUpAnim, new Vector3(0f, 4f, 0f), Quaternion.identity, true, true);
+            }
+            if (healthUpParticle != null)
+            {
+                createEffect(healthUpParticle, new Vector3(0, 0, 0), Quaternion.Euler(-90, 0, 0), false, false);
+            }
+
+            maxhp += hpIncrement;
+            hp += hpIncrement;
+        }
     }
 
 
     public void CheckStayState() //check how position to need (stay or sit)
     {
-        if (grenadeObject != null && Random.Range(1, 100) <= 15 && timeToThrowGrenade < 0f)
+        if (grenadeObject != null && target != null && Random.Range(1, 100) <= grenadeThrowChancePercents && timeToThrowGrenade < 0f)
         {
             Invoke("GrenadeThrowChangeState", 0.1f); //changeState to grenadeThrow
             timeToThrowGrenade = timeToThrowGrenadeMax;
         }
-        if (currentState.StateName != "ShootState" && maxhp / 2 <= hp)
+        if (currentState.StateName != "ShootState" && maxhp / 2 <= hp && !MovedToPosition)
         {
             SetState(AttackState); //changeState
         }
-        else if (currentState.StateName != "SitDefendingState" && maxhp / 2 > hp)
+        else if (currentState.StateName != "SitDefendingState" && maxhp / 2 > hp || MovedToPosition)
         {
             SetState(DefendState); //changeState
         }
@@ -312,7 +343,7 @@ public class BotRun : MonoBehaviour
 
                             if (currentState.StateName == "MoveState" && (agent.destination - transform.position).magnitude > 15f)
                             {
-                                TakeDamage(0); //ChangeState (takeDamage дл€ перенаправлени€ в правильную позицию)
+                                CheckStayState(); //ChangeState
                             }
                             break;
                         }
@@ -397,10 +428,7 @@ public class BotRun : MonoBehaviour
 
     public void refillMagazine() // онец перезар€дки
     {
-        if (Gun.MagazineObject != null)
-        {
-            Gun.refillMagazine();
-        }
+        Gun.refillMagazine();
         CheckStayState();
     }
 
@@ -408,7 +436,7 @@ public class BotRun : MonoBehaviour
     public void GrenadePickUp()
     {
         currentGrenade = Instantiate(grenadeObject, leftHand);
-        currentGrenade.GetComponent<grenade>().thrownBot = this;
+        currentGrenade.GetComponent<grenade>().GrenadeInit(this, EnemiesTag);
         currentGrenade.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         currentGrenade.transform.localPosition = new Vector3(0, 0, 0);
         
@@ -462,6 +490,26 @@ public class BotRun : MonoBehaviour
             StartGameScript startGameScriptTemp = GameObject.FindGameObjectWithTag("GameManager").GetComponent<StartGameScript>();
             startGameScriptTemp.GameEnd(gameObject.tag);
         }
+    }
+
+    public void addSpreadDebuff(float spreadBuff, float timeStep)
+    {
+        spreadDebuff = -spreadBuff;
+        Invoke("defaultSpread", timeStep);
+        Destroy(createEffect(blindSprite, new Vector3(0f, 4f, 0f), Quaternion.identity, true, false), timeStep);
+
+    }
+
+    public void defaultSpread()
+    {
+        spreadDebuff = spreadDefuffDefault;
+    }
+
+    private GameObject createEffect(GameObject original, Vector3 positionOffset, Quaternion rotationOffset, bool isSprite, bool isAnim)
+    {
+        GameObject effectGameObject = Instantiate(original, transform.position, rotationOffset);
+        effectGameObject.GetComponent<EffectsMove>().myConstructor(positionOffset, this, isSprite, isAnim);
+        return effectGameObject;
     }
 
 }

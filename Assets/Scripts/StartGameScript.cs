@@ -6,14 +6,29 @@ using UnityEngine.SceneManagement;
 
 public class StartGameScript : MonoBehaviour //responsible for resources and spawn player's units
 {
+    [SerializeField] private GameObject AkGuyButton;
     [SerializeField] private GameObject AkGuy;
     private float AkGuyCost = 3f;
+    private float AkGuyCooldown = 0.5f;
+
+    [SerializeField] private GameObject MachineGunGuyButton;
     [SerializeField] private GameObject MachineGunGuy;
     private float MachineGunGuyCost = 5f;
+    private float MachineGunGuyCooldown = 3f;
+
+    [SerializeField] private GameObject SniperGuyButton;
     [SerializeField] private GameObject SniperGuy;
     private float SniperGuyCost = 6f;
+    private float SniperGuyCooldown = 7f;
+
+    [SerializeField] private GameObject ShotGunnerGuyButton;
     [SerializeField] private GameObject ShotGunnerGuy;
     private float ShotGunnerGuyCost = 10f;
+    private float ShotGunnerGuyCooldown = 2.5f;
+
+
+    [SerializeField] private Button IncreaseHpButton;
+    [SerializeField] private Button IncreaseIncomeButton;
 
     [SerializeField] private Text IncomeIncreaseButtonText;
     private int IncomeLevel = 0;
@@ -31,7 +46,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
     [SerializeField] private Text ResourcesText;
 
 
-    private GameObject TopPanel;
+    private GameObject UnitsPanel;
     private GameObject DefeatPanel;
     private GameObject WinPanel;
     private GameObject PausePanel;
@@ -43,15 +58,18 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
     [SerializeField] private Slider VolumeSlider;
     [SerializeField] private Slider CameraKeysMovingSpeedSlider;
     [SerializeField] private Slider CameraMoveSpeedSlider;
+    [SerializeField] private Slider CameraZoomSpeedSlider;
 
     private Animator PausePanelAnim;
     private Animator WinPanelAnim;
     private Animator DefeatPanelAnim;
 
+    [SerializeField] private float PauseSpeed = 2f; //the more the faster doing pause
+
     private void Awake()
     {
         gameManagerStatic.StartManager();
-        TopPanel = GameObject.FindGameObjectWithTag("TopPanel");
+        UnitsPanel = GameObject.FindGameObjectWithTag("UnitsPanel");
         DefeatPanel = GameObject.FindGameObjectWithTag("DefeatPanel");
         DefeatPanel.SetActive(false);
         WinPanel = GameObject.FindGameObjectWithTag("WinPanel");
@@ -71,8 +89,13 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
 
         if (CameraKeysMovingSpeedSlider != null)
             CameraKeysMovingSpeedSlider.value = gameManagerStatic.CameraKeysMovingSpeed / gameManagerStatic.CameraMaxKeysMovingSpeed;
+
         if (CameraMoveSpeedSlider != null)
             CameraMoveSpeedSlider.value = gameManagerStatic.CameraMoveSpeed / gameManagerStatic.CameraMaxMoveSpeed;
+
+        if (CameraZoomSpeedSlider != null)
+            CameraZoomSpeedSlider.value = gameManagerStatic.CameraScrollSpeed / gameManagerStatic.CameraMaxScrollSpeed;
+
 
 
         AudioListener.volume = gameManagerStatic.Volume; ;
@@ -87,18 +110,22 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
     public void spawnAkGuy()
     {
         SpawnUnit(AkGuy, AkGuyCost);
+        StartCoroutine(spawnCooldown(AkGuyButton, AkGuyCooldown));
     }
     public void spawnSniper()
     {
         SpawnUnit(SniperGuy, SniperGuyCost);
+        StartCoroutine(spawnCooldown(SniperGuyButton, SniperGuyCooldown));
     }
     public void spawnMachineGunGuy()
     {
         SpawnUnit(MachineGunGuy, MachineGunGuyCost);
+        StartCoroutine(spawnCooldown(MachineGunGuyButton, MachineGunGuyCooldown));
     }
     public void spawnShotGunGuy()
     {
         SpawnUnit(ShotGunnerGuy, ShotGunnerGuyCost);
+        StartCoroutine(spawnCooldown(ShotGunnerGuyButton, ShotGunnerGuyCooldown));
     }
 
     public void SpawnUnit(GameObject unit, float cost)
@@ -109,9 +136,30 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
             GameObject spawnedUnit = Instantiate(unit, new Vector3(Random.Range(13f, levelWaves.mapWidthX - 10), 0f, 3f), Quaternion.identity);
             spawnedUnit.SetActive(true);
             resources -= cost;
-            ResourcesText.text = $"{resources}(+{income_resources})$";
+            unitsPanelUpdate();
         }
     }
+
+
+    private IEnumerator spawnCooldown(GameObject ButtonObject, float cooldown)
+    {
+        float maxCooldown = cooldown;
+        cooldown = 0;
+        Image img = ButtonObject.GetComponent<Image>();
+        Button btn = ButtonObject.GetComponent<Button>();
+        img.fillAmount = 0f;
+        while (cooldown < maxCooldown)
+        {
+            btn.interactable = false; //чтобы обновление этой панели не активировало текущую кнопку с перезарядкой
+            img.fillAmount = cooldown / maxCooldown;
+            cooldown += 0.02f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        btn.interactable = true;
+        img.fillAmount = 1f;
+        unitsPanelUpdate();
+    }
+
 
     public void AttackButton(GameObject positionGroups) //units go attack when button attack pressed
     {
@@ -147,7 +195,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
                 IncomeIncreaseButtonText.text = "max lvl";
             else
                 IncomeIncreaseButtonText.text = $"{IncomeLevelCost[IncomeLevel]}$";
-            ResourcesText.text = $"{resources}(+{income_resources})$";
+            unitsPanelUpdate();
         }
     }
 
@@ -160,6 +208,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
             AkGuy.GetComponent<BotRun>().IncreaseHp();
             SniperGuy.GetComponent<BotRun>().IncreaseHp();
             MachineGunGuy.GetComponent<BotRun>().IncreaseHp();
+            ShotGunnerGuy.GetComponent<BotRun>().IncreaseHp();
 
             GameObject[] unitsOnBattleField = GameObject.FindGameObjectsWithTag("bot_ally");
             foreach(GameObject unit in unitsOnBattleField)
@@ -172,8 +221,44 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
                 hpIncreaseButtonText.text = "max lvl";
             else
                 hpIncreaseButtonText.text = $"{hpLevelCost[hpLevel]}$";
-            ResourcesText.text = $"{resources}(+{income_resources})$";
+            unitsPanelUpdate();
         }
+    }
+
+
+    private void unitsPanelUpdate()
+    {
+        ResourcesText.text = $"{resources}(+{income_resources})$";
+        if (resources >= AkGuyCost)
+            AkGuyButton.GetComponent<Button>().interactable = true;
+        else
+            AkGuyButton.GetComponent<Button>().interactable = false;
+
+        if (resources >= SniperGuyCost)
+            SniperGuyButton.GetComponent<Button>().interactable = true;
+        else
+            SniperGuyButton.GetComponent<Button>().interactable = false;
+
+        if (resources >= MachineGunGuyCost)
+            MachineGunGuyButton.GetComponent<Button>().interactable = true;
+        else
+            MachineGunGuyButton.GetComponent <Button>().interactable = false;
+
+        if (resources >= ShotGunnerGuyCost)
+            ShotGunnerGuyButton.GetComponent<Button>().interactable = true;
+        else
+            ShotGunnerGuyButton.GetComponent<Button>().interactable = false;
+
+
+        if (hpLevel < hpLevelCost.Length && resources >= hpLevelCost[hpLevel])
+            IncreaseHpButton.GetComponent<Button>().interactable = true;
+        else
+            IncreaseHpButton.GetComponent<Button>().interactable = false;
+
+        if (IncomeLevel < IncomeLevelCost.Length && resources >= IncomeLevelCost[IncomeLevel])
+            IncreaseIncomeButton.GetComponent<Button>().interactable = true;
+        else
+            IncreaseIncomeButton.GetComponent <Button>().interactable = false;
     }
 
 
@@ -182,7 +267,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
         while (true)
         {
             resources += income_resources;
-            ResourcesText.text = $"{resources}(+{income_resources})$";
+            unitsPanelUpdate();
             yield return IncomeDelay;
         }
     }
@@ -245,7 +330,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
 
     private void topPanelSwitch(bool switcher)
     {
-        foreach (Transform item in TopPanel.transform)
+        foreach (Transform item in UnitsPanel.transform)
         {
             if (item.gameObject.GetComponent<Button>())
             {
@@ -284,25 +369,28 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
     private IEnumerator timeFreezeIEnum()
     {
         isPausing = true;
-        while (Time.timeScale > 0.001f)
+        while (Time.timeScale > 0.1f)
         {
-            Time.timeScale -= 0.01f;
+            Time.timeScale -= Time.fixedDeltaTime;
             PausePanelAnim.speed = 1 / Time.timeScale;
-            yield return new WaitForSeconds(0.001f * Time.timeScale);
+            yield return new WaitForSeconds(Time.fixedDeltaTime * Time.timeScale / PauseSpeed);
         }
+        Time.timeScale = 0.0001f;
         isPausing = false;
     }
 
     private IEnumerator timeFreezeIEnumEndGame()
     {
         isPausing = true;
-        while (Time.timeScale > 0.001f)
+        while (Time.timeScale > 0.1f)
         {
-            Time.timeScale -= 0.01f;
+            Time.timeScale -= Time.fixedDeltaTime;
             WinPanelAnim.speed = 1 / Time.timeScale;
             DefeatPanelAnim.speed = 1 / Time.timeScale;
-            yield return new WaitForSeconds(0.001f * Time.timeScale);
+            yield return new WaitForSeconds(Time.fixedDeltaTime * Time.timeScale / PauseSpeed);
         }
+        Time.timeScale = 0.0001f;
+
     }
 
     private void timeRevert()

@@ -15,7 +15,8 @@ public class CameraMove : MonoBehaviour
     private Vector3 followOffset; //for zooming
     private Vector3 zoomDir; //temp for zooming
     private float zoomAmount = 5f;
-    private float zoomSpeed = 2f;
+    private float maxZoomSpeed = 4f;
+    [SerializeField, Range(1, 4)]private float zoomSpeed = 2f;
     private float followOffsetMinX = 22f;
     private float followOffsetMaxX = 28f;
     private float followOffsetMinY = -10f;
@@ -37,6 +38,7 @@ public class CameraMove : MonoBehaviour
         CinemachineCameraTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         gameManagerStatic.CameraMaxKeysMovingSpeed = maxKeysMovingSpeed;
         gameManagerStatic.CameraMaxMoveSpeed = maxMoveSpeed;
+        gameManagerStatic.CameraMaxScrollSpeed = maxZoomSpeed;
         KeysMovingSpeed = gameManagerStatic.CameraKeysMovingSpeed;
         moveSpeed = gameManagerStatic.CameraMoveSpeed;
 
@@ -169,5 +171,11 @@ public class CameraMove : MonoBehaviour
     {
         moveSpeed = speed * maxMoveSpeed;
         gameManagerStatic.CameraMoveSpeed = moveSpeed;
+    }
+
+    public void SetScrollSpeed(float speed)
+    {
+        zoomSpeed = speed * maxZoomSpeed;
+        gameManagerStatic.CameraScrollSpeed = zoomSpeed;
     }
 }

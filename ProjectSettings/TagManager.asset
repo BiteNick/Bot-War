@@ -20,7 +20,9 @@ TagManager:
   - DefeatPanel
   - WinPanel
   - PausePanel
-  - TopPanel
+  - UnitsPanel
+  - positionsGroupAlly
+  - positionsGroupEnemy
   layers:
   - Default
   - TransparentFX
@@ -32,7 +34,7 @@ TagManager:
   - 
   - BotUnits
   - looseTrigger
-  - 
+  - noPostProcessing
   - 
   - 
   - 

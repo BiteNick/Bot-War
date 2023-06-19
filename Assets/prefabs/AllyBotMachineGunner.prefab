@@ -370,6 +370,7 @@ Transform:
   - {fileID: 4419467903213253337}
   - {fileID: 9135028369894888850}
   - {fileID: 7878174504282896108}
+  - {fileID: 3953096248299192590}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -453,17 +454,19 @@ MonoBehaviour:
   hp: 70
   hpIncrement: 12
   kills: 0
+  spreadDefuffDefault: 0
   spreadDebuff: 0
   distance: 40
+  grenadeThrowChancePercents: 15
   currentPositionGameObject: {fileID: 0}
   EnemiesTag: 
   looseTriggerTag: 
   enemiesCollisions: []
   target: {fileID: 0}
-  timeToKillTarget: 0
+  timeToThrowGrenadeMax: 15
   targetScript: {fileID: 0}
   attackPosition: {fileID: 7878174504282896108}
-  AngleInDegrees: 170
+  AngleInDegrees: 30
   delayShot: 0
   StayAtPosition: 0
   MovedToPosition: 0
@@ -492,9 +495,14 @@ MonoBehaviour:
   - {fileID: 260301700115006748}
   - {fileID: 4591334942052031200}
   Hat: {fileID: 938240927598423826}
-  grenadeObject: {fileID: 0}
+  grenadeObject: {fileID: 2153093375350178230, guid: 83ba74edd44efdb438894831f2754d47, type: 3}
   currentGrenade: {fileID: 0}
-  grenadeMarker: {fileID: 0}
+  grenadeMarker: {fileID: 3953096248299192590}
+  skipPosition: 0
+  materialBlink: {fileID: 0}
+  healthUpAnim: {fileID: 6375182576276602319, guid: f7452e9ff5ce01d4ba0ad0e18b37f0ca, type: 3}
+  healthUpParticle: {fileID: 9008536704942646867, guid: 9c1eda232b34f63419f29d72758c6eba, type: 3}
+  blindSprite: {fileID: 6375182576276602319, guid: d114be736863d644aafed99bc256b13b, type: 3}
 --- !u!114 &6251824096024569114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -978,6 +986,37 @@ Transform:
   - {fileID: 3449457964955343189}
   m_Father: {fileID: 3491047658420604855}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3676384087616009075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3953096248299192590}
+  m_Layer: 8
+  m_Name: GrenadeMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3953096248299192590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3676384087616009075}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.297, y: 2.607, z: 0.988}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 893792661603355104}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3828227825600240178
 GameObject:
