@@ -31,7 +31,7 @@ public class BotRun : MonoBehaviour
     [SerializeField] private float distance; //radius start attacks
     [SerializeField] private int grenadeThrowChancePercents = 12;
     [SerializeField] public GameObject currentPositionGameObject; //текущее укрытие объекта
-    [SerializeField] private string EnemiesTag; //tag of enemies this object
+    [SerializeField] public string EnemiesTag; //tag of enemies this object
     [SerializeField] private string looseTriggerTag;
     [SerializeField] private Collider[] enemiesCollisions;
     [SerializeField] public GameObject target;
@@ -336,8 +336,8 @@ public class BotRun : MonoBehaviour
                         {
                             markerItemPosition = item.transform.position + new Vector3(0f, markerOffsetYStay, 0f);
                         }
-                        Vector3 heading = markerItemPosition - Gun.SpawnBulletPos.position;
-                        Ray ray = new Ray(Gun.SpawnBulletPos.position, heading / heading.magnitude);
+                        Vector3 heading = markerItemPosition - Gun.transform.position;
+                        Ray ray = new Ray(Gun.transform.position, heading / heading.magnitude);
                         if (Physics.Raycast(ray, out hit) && hit.transform.CompareTag(EnemiesTag))
                         {
 

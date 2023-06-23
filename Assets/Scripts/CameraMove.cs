@@ -44,6 +44,14 @@ public class CameraMove : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        minPositionX = 0;
+        maxPositionX = gameManagerStatic.currentMapWidthX - 24f;
+        minPositionZ = 30;
+        maxPositionZ = gameManagerStatic.currentMapWidthZ - 15f;
+    }
+
 
     void Update()
     {

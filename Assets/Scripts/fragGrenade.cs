@@ -10,6 +10,7 @@ public class fragGrenade : grenade
 
     protected override void explosion()
     {
+        audioPlay();
         GameObject explosionInstantiated = Instantiate(explosionEffect, transform.position, transform.rotation);
 
         Collider[] Botscolliders = Physics.OverlapSphere(transform.position, radius, 1 << 8);
@@ -33,7 +34,12 @@ public class fragGrenade : grenade
                 rb.AddExplosionForce(force, transform.position, radius);
         }
 
+
+        foreach (Transform children in transform)
+        {
+            children.gameObject.SetActive(false);
+        }
         Destroy(explosionInstantiated, 5f);
-        Destroy(gameObject);
+        Destroy(gameObject, 3f); //delay in destroy needs for audioPlay to end
     }
 }

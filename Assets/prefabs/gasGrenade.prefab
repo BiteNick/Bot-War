@@ -127,7 +127,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: dfbfc711fa8208b4584f430e140bc867, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionDelay: 5
   explosionEffect: {fileID: 1273915125232972, guid: 9025a869ed1285c478c44822c264c45e, type: 3}
-  explosionClip: {fileID: 0}
+  explosionClip: {fileID: 8300000, guid: dfbfc711fa8208b4584f430e140bc867, type: 3}
   damage: 10
   radius: 10
   lifeSpan: 12

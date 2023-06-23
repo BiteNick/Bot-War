@@ -243,7 +243,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7906f0bc1cce9cd44b6b0b1bbce6c981, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
@@ -343,4 +343,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionDelay: 5
   explosionEffect: {fileID: 1828176872806910, guid: 865cf814a2f442240a7c7897d7c93b2a, type: 3}
-  explosionClip: {fileID: 0}
+  explosionClip: {fileID: 8300000, guid: 7906f0bc1cce9cd44b6b0b1bbce6c981, type: 3}

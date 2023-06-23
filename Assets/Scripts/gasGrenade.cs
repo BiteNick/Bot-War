@@ -10,6 +10,7 @@ public class gasGrenade : grenade
     [SerializeField] private float timeStep = 1f;
     protected override void explosion()
     {
+        audioPlay();
         StartCoroutine("smog");
         GameObject explosionInstantiated = Instantiate(explosionEffect, transform.position + new Vector3(0, 2.5f, 0), transform.rotation);
         Destroy(explosionInstantiated, lifeSpan + 2);

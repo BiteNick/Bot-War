@@ -7,12 +7,14 @@ public abstract class grenade : MonoBehaviour
     [SerializeField] private float explosionDelay = 5f;
     [SerializeField] protected GameObject explosionEffect;
     [SerializeField] protected AudioClip explosionClip;
+    protected AudioSource explosionSource;
     protected BotRun thrownBot; //who is throwded this object
     protected string enemiesTag;
 
     private void Start()
     {
         Invoke("explosion", explosionDelay);
+        explosionSource = gameObject.GetComponent<AudioSource>();
     }
 
     public void GrenadeInit(BotRun thrownBot, string enemiesTag)
@@ -22,4 +24,9 @@ public abstract class grenade : MonoBehaviour
     }
 
     protected abstract void explosion();
+
+    protected void audioPlay()
+    {
+        explosionSource.PlayOneShot(explosionClip);
+    }
 }

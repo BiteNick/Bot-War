@@ -4,6 +4,11 @@ using UnityEngine;
 
 public static class gameManagerStatic
 {
+    //positions
+    public static float currentMapWidthX;
+    public static float currentMapWidthZ;
+
+    //settings
     public static float Volume = 0.7f;
     public static float CameraMaxKeysMovingSpeed = 8f;
     public static float CameraKeysMovingSpeed = 4f;
@@ -11,6 +16,8 @@ public static class gameManagerStatic
     public static float CameraMoveSpeed = 4f;
     public static float CameraMaxScrollSpeed = 4f;
     public static float CameraScrollSpeed = 2f;
+
+    //positions
     public static Dictionary<GameObject, bool> Positions; //engaged positions (true - if engaged, false - if empty)
     public static Dictionary<GameObject, List<GameObject>> positionsGroups;
     public static void StartManager()

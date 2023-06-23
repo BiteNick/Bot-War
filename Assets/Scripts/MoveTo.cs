@@ -18,6 +18,13 @@ public class MoveTo : State
 
     public override void Init()
     {
+        if (character.EnemiesTag == "bot_enemy")
+            mapEndingZ = gameManagerStatic.currentMapWidthZ;
+
+        else
+            mapEndingZ = 0;
+
+
         if (character.skipPosition)
         {
             character.skipPosition = false;
@@ -82,9 +89,9 @@ public class MoveTo : State
 
             else
             {
+                gameManagerStatic.SetPosition(character.currentPositionGameObject, true, character.gameObject);
                 if (character.CompareTag("bot_ally"))
                 {
-                    gameManagerStatic.SetPosition(character.currentPositionGameObject, true, character.gameObject);
                     gameManagerStatic.turnButtons(character.currentPositionGameObject);
                 }
                 character.MovedToPosition = true;

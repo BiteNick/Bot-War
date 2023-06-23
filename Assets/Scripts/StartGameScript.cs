@@ -7,21 +7,26 @@ using UnityEngine.SceneManagement;
 public class StartGameScript : MonoBehaviour //responsible for resources and spawn player's units
 {
     [SerializeField] private GameObject AkGuyButton;
+    [SerializeField] private GameObject AkGuyPrefab;
     [SerializeField] private GameObject AkGuy;
     private float AkGuyCost = 3f;
     private float AkGuyCooldown = 0.5f;
 
+
     [SerializeField] private GameObject MachineGunGuyButton;
+    [SerializeField] private GameObject MachineGunGuyPrefab;
     [SerializeField] private GameObject MachineGunGuy;
     private float MachineGunGuyCost = 5f;
     private float MachineGunGuyCooldown = 3f;
 
     [SerializeField] private GameObject SniperGuyButton;
+    [SerializeField] private GameObject SniperGuyPrefab;
     [SerializeField] private GameObject SniperGuy;
     private float SniperGuyCost = 6f;
     private float SniperGuyCooldown = 7f;
 
     [SerializeField] private GameObject ShotGunnerGuyButton;
+    [SerializeField] private GameObject ShotGunnerGuyPrefab;
     [SerializeField] private GameObject ShotGunnerGuy;
     private float ShotGunnerGuyCost = 10f;
     private float ShotGunnerGuyCooldown = 2.5f;
@@ -68,6 +73,10 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
 
     private void Awake()
     {
+
+        gameManagerStatic.currentMapWidthX = GameObject.Find("mainTerrain").GetComponent<Terrain>().terrainData.size.x;
+        gameManagerStatic.currentMapWidthZ = GameObject.Find("mainTerrain").GetComponent<Terrain>().terrainData.size.z;
+
         gameManagerStatic.StartManager();
         UnitsPanel = GameObject.FindGameObjectWithTag("UnitsPanel");
         DefeatPanel = GameObject.FindGameObjectWithTag("DefeatPanel");
@@ -76,10 +85,31 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
         WinPanel.SetActive(false);
         PausePanel = GameObject.FindGameObjectWithTag("PausePanel");
         PausePanel.SetActive(false);
+
+        AkGuyPrefab = Resources.Load<GameObject>("prefabs/characters/AllyBot");
+        MachineGunGuyPrefab = Resources.Load<GameObject>("prefabs/characters/AllyBotMachineGunner");
+        SniperGuyPrefab = Resources.Load<GameObject>("prefabs/characters/AllyBotSniper");
+        ShotGunnerGuyPrefab = Resources.Load<GameObject>("prefabs/characters/AllyBotShotGunner");
+
+        levelWaves = Resources.Load<levelWaves>($"ScriptableObjects/levelsSpawn/{SceneManager.GetActiveScene().name}");
     }
 
     private void Start()
     {
+        AkGuy = Instantiate(AkGuyPrefab, transform.position, Quaternion.identity);
+        AkGuy.SetActive(false);
+
+        MachineGunGuy = Instantiate(MachineGunGuyPrefab, transform.position, Quaternion.identity);
+        MachineGunGuy.SetActive(false);
+
+        SniperGuy = Instantiate(SniperGuyPrefab, transform.position, Quaternion.identity);
+        SniperGuy.SetActive(false);
+
+        ShotGunnerGuy = Instantiate(ShotGunnerGuyPrefab, transform.position, Quaternion.identity);
+        ShotGunnerGuy.SetActive(false);
+
+
+
         PausePanelAnim = PausePanel.GetComponent<Animator>();
         WinPanelAnim = WinPanel.GetComponent<Animator>();
         DefeatPanelAnim = DefeatPanel.GetComponent<Animator>();
@@ -133,7 +163,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
         
         if (unit != null && resources >= cost)
         {
-            GameObject spawnedUnit = Instantiate(unit, new Vector3(Random.Range(13f, levelWaves.mapWidthX - 10), 0f, 3f), Quaternion.identity);
+            GameObject spawnedUnit = Instantiate(unit, new Vector3(Random.Range(13f, gameManagerStatic.currentMapWidthX - 10), 0f, 3f), Quaternion.identity);
             spawnedUnit.SetActive(true);
             resources -= cost;
             unitsPanelUpdate();
