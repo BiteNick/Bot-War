@@ -42,7 +42,7 @@ public class MoveTo : State
 
         foreach (GameObject stand in gameManagerStatic.Positions.Keys)
         {
-            if (gameManagerStatic.Positions[stand] == false && positionCountX(stand.transform, character.transform) && positionCountZ(stand.transform, character.transform))
+            if (gameManagerStatic.positionCheck(character.EnemiesTag, stand) && positionCountX(stand.transform, character.transform) && positionCountZ(stand.transform, character.transform))
             {
                 movePoint = stand.transform;
                 character.currentPositionGameObject = stand;

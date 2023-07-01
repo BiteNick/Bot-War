@@ -336,11 +336,12 @@ public class BotRun : MonoBehaviour
                         {
                             markerItemPosition = item.transform.position + new Vector3(0f, markerOffsetYStay, 0f);
                         }
-                        Vector3 heading = markerItemPosition - Gun.transform.position;
-                        Ray ray = new Ray(Gun.transform.position, heading / heading.magnitude);
+                        Vector3 heading = markerItemPosition - Gun.SpawnBulletPos.position;
+                        Ray ray = new Ray(Gun.SpawnBulletPos.position, heading / heading.magnitude);
+                        target = null;
                         if (Physics.Raycast(ray, out hit) && hit.transform.CompareTag(EnemiesTag))
                         {
-
+                            target = item.gameObject;
                             if (currentState.StateName == "MoveState" && (agent.destination - transform.position).magnitude > 15f)
                             {
                                 CheckStayState(); //ChangeState

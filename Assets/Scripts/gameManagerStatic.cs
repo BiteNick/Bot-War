@@ -19,19 +19,24 @@ public static class gameManagerStatic
 
     //positions
     public static Dictionary<GameObject, bool> Positions; //engaged positions (true - if engaged, false - if empty)
+
+    public static List<GameObject> positionsGroupAlly;
+    public static List<GameObject> positionsGroupEnemy;
+    public static List<GameObject> positionsGroupCommon;
+
     public static Dictionary<GameObject, List<GameObject>> positionsGroups;
     public static void StartManager()
     {
         Positions = new Dictionary<GameObject, bool>();
 
 
-        List<GameObject> positionsGroupAlly = new List<GameObject>();
+        positionsGroupAlly = new List<GameObject>(); //groups of positions ally
         positionsGroupAlly.AddRange(GameObject.FindGameObjectsWithTag("positionsGroupAlly"));
 
-        List<GameObject> positionsGroupEnemy = new List<GameObject>();
+        positionsGroupEnemy = new List<GameObject>(); //groups of positions enemy
         positionsGroupEnemy.AddRange(GameObject.FindGameObjectsWithTag("positionsGroupEnemy"));
 
-        List<GameObject> positionsGroupCommon = new List<GameObject>();
+        positionsGroupCommon = new List<GameObject>(); //groups of common positions
         positionsGroupCommon.AddRange(GameObject.FindGameObjectsWithTag("positionsGroup"));
 
         List<GameObject> allPositionsGroup = new List<GameObject>();
@@ -167,6 +172,53 @@ public static class gameManagerStatic
     }
 
     
+    public static bool positionCheck(string enemiesTag, GameObject stand) //checking separation of positions for every team
+    {
+        if (enemiesTag == "bot_enemy")
+        {
+            if (groupPositionCheck(positionsGroupAlly, stand) && Positions[stand] == false || groupPositionCheck(positionsGroupCommon, stand) && Positions[stand] == false)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        else if (enemiesTag == "bot_ally")
+        {
+            if (groupPositionCheck(positionsGroupEnemy, stand) && Positions[stand] == false || groupPositionCheck(positionsGroupCommon, stand) && Positions[stand] == false)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        else
+        {
+            return false;
+        }
+
+    }
+
+
+    private static bool groupPositionCheck(List<GameObject> groupsList, GameObject stand)
+    {
+        foreach (GameObject group in groupsList)
+        {
+            foreach (Transform item in group.transform)
+            {
+                if (item.gameObject == stand)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

@@ -390,11 +390,12 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
         timeRevert();
     }
 
-    private void timeFreeze()
+    public void NextLevel(string levelName)
     {
-        Time.timeScale = 0.001f;
-        isPausing = false;
+        SceneManager.LoadScene(levelName);
+        timeRevert();
     }
+
 
     private IEnumerator timeFreezeIEnum()
     {
