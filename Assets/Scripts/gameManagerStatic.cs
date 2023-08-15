@@ -9,6 +9,7 @@ public static class gameManagerStatic
     public static float currentMapWidthZ;
 
     //settings
+    public static int GraphicsQuality;
     public static float Volume = 0.7f;
     public static float CameraMaxKeysMovingSpeed = 8f;
     public static float CameraKeysMovingSpeed = 4f;
@@ -17,12 +18,17 @@ public static class gameManagerStatic
     public static float CameraMaxScrollSpeed = 4f;
     public static float CameraScrollSpeed = 2f;
 
+
     //positions
     public static Dictionary<GameObject, bool> Positions; //engaged positions (true - if engaged, false - if empty)
-
     public static List<GameObject> positionsGroupAlly;
     public static List<GameObject> positionsGroupEnemy;
     public static List<GameObject> positionsGroupCommon;
+
+
+    //List stats of characters
+    public static List<BotRun> botRunStatsAlly = new List<BotRun>(); //0 - ak, 1 - machinegun, 2 - sniper, 3 - shotgun
+
 
     public static Dictionary<GameObject, List<GameObject>> positionsGroups;
     public static void StartManager()

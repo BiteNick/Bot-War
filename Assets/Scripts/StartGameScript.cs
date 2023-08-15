@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.PostProcessing;
 
 public class StartGameScript : MonoBehaviour //responsible for resources and spawn player's units
 {
@@ -96,16 +97,27 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
 
     private void Start()
     {
+        if (gameManagerStatic.GraphicsQuality == 0)
+        {
+            PostProcessVolume component = gameObject.GetComponent <PostProcessVolume>();
+            component.enabled = false;
+        }
+
+
         AkGuy = Instantiate(AkGuyPrefab, transform.position, Quaternion.identity);
+        gameManagerStatic.botRunStatsAlly.Add(AkGuy.GetComponent<BotRun>());
         AkGuy.SetActive(false);
 
         MachineGunGuy = Instantiate(MachineGunGuyPrefab, transform.position, Quaternion.identity);
+        gameManagerStatic.botRunStatsAlly.Add(MachineGunGuy.GetComponent<BotRun>());
         MachineGunGuy.SetActive(false);
 
         SniperGuy = Instantiate(SniperGuyPrefab, transform.position, Quaternion.identity);
+        gameManagerStatic.botRunStatsAlly.Add(SniperGuy.GetComponent<BotRun>());
         SniperGuy.SetActive(false);
 
         ShotGunnerGuy = Instantiate(ShotGunnerGuyPrefab, transform.position, Quaternion.identity);
+        gameManagerStatic.botRunStatsAlly.Add(ShotGunnerGuy.GetComponent<BotRun>());
         ShotGunnerGuy.SetActive(false);
 
 
@@ -137,28 +149,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
         StartCoroutine("Income");
     }
 
-    public void spawnAkGuy()
-    {
-        SpawnUnit(AkGuy, AkGuyCost);
-        StartCoroutine(spawnCooldown(AkGuyButton, AkGuyCooldown));
-    }
-    public void spawnSniper()
-    {
-        SpawnUnit(SniperGuy, SniperGuyCost);
-        StartCoroutine(spawnCooldown(SniperGuyButton, SniperGuyCooldown));
-    }
-    public void spawnMachineGunGuy()
-    {
-        SpawnUnit(MachineGunGuy, MachineGunGuyCost);
-        StartCoroutine(spawnCooldown(MachineGunGuyButton, MachineGunGuyCooldown));
-    }
-    public void spawnShotGunGuy()
-    {
-        SpawnUnit(ShotGunnerGuy, ShotGunnerGuyCost);
-        StartCoroutine(spawnCooldown(ShotGunnerGuyButton, ShotGunnerGuyCooldown));
-    }
-
-    public void SpawnUnit(GameObject unit, float cost)
+    public void SpawnUnit(GameObject unit, float cost, GameObject ButtonObject, float cooldown)
     {
         
         if (unit != null && resources >= cost)
@@ -167,6 +158,7 @@ public class StartGameScript : MonoBehaviour //responsible for resources and spa
             spawnedUnit.SetActive(true);
             resources -= cost;
             unitsPanelUpdate();
+            StartCoroutine(spawnCooldown(ButtonObject, cooldown));
         }
     }
 

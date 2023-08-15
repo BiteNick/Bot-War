@@ -20,9 +20,9 @@ public abstract class Gun : MonoBehaviour
     [SerializeField] public Transform SpawnBulletPos;
     [SerializeField] public float fireDistance; //дальность стрельбы
     [SerializeField] protected float spread; //дефолтный разброс
-    [SerializeField] protected float damage; //урон
+    [SerializeField] public float damage; //урон
     [SerializeField] public float FireRate; //задержка между выстрелами
-    [SerializeField] protected int magazineCapacity = 1; //Вместимость магазина
+    [SerializeField] public int magazineCapacity = 1; //Вместимость магазина
     [SerializeField] protected int magazineAmmos; //Текущее количество патронов
     protected float delay; //осталось до конца следующего выстрела
     protected float offsetY = -90; //погрешность поворота оружия

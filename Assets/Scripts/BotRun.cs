@@ -18,9 +18,10 @@ public class BotRun : MonoBehaviour
     [SerializeField] public State shotGunDeployState;
     [SerializeField] public State GrenadeThrowState;
     [SerializeField] public Gun Gun;
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float maxhp = 50f;
-    [SerializeField] private float hp;
+    [SerializeField] public float speed;
+    [SerializeField] public float maxhp;
+    [SerializeField] public float hp;
+
     [SerializeField] private float hpIncrement = 10f; //using this variable when upgrading hp
     [SerializeField] private int kills = 0;
 
@@ -71,6 +72,10 @@ public class BotRun : MonoBehaviour
     [SerializeField] private GameObject healthUpParticle;
 
     [SerializeField] private GameObject blindSprite;
+    [SerializeField] private GameObject gasPoisonedSprite;
+
+    private Vector3 defaultSpriteOffset = new Vector3(0f, 4f, 0f);
+
     bool isBlinded = false;
 
     private void Awake()
@@ -200,7 +205,7 @@ public class BotRun : MonoBehaviour
         {
             if (healthUpAnim != null)
             {
-                createEffect(healthUpAnim, new Vector3(0f, 4f, 0f), Quaternion.identity, true, true);
+                createEffect(healthUpAnim, defaultSpriteOffset, Quaternion.identity, true, true);
             }
             if (healthUpParticle != null)
             {
@@ -497,8 +502,13 @@ public class BotRun : MonoBehaviour
     {
         spreadDebuff = -spreadBuff;
         Invoke("defaultSpread", timeStep);
-        Destroy(createEffect(blindSprite, new Vector3(0f, 4f, 0f), Quaternion.identity, true, false), timeStep);
+        Destroy(createEffect(blindSprite, defaultSpriteOffset, Quaternion.identity, true, false), timeStep);
 
+    }
+
+    public void createGasEffect(float timeStep)
+    {
+        Destroy(createEffect(gasPoisonedSprite, defaultSpriteOffset, Quaternion.identity, true, false), timeStep);
     }
 
     public void defaultSpread()

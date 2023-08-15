@@ -29,6 +29,7 @@ public class gasGrenade : grenade
                 {
                     BotRun colliderScript = collider.GetComponent<BotRun>();
                     colliderScript.TakeDamage(damage);
+                    colliderScript.createGasEffect(timeStep);
                 }
             }
             lifeSpan -= timeStep;

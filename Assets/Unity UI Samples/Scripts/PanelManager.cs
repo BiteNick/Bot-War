@@ -44,7 +44,10 @@ public class PanelManager : MonoBehaviour {
 			resolutionInit();
 
 		if (graphicsDropdown != null)
+		{
 			graphicsDropdown.value = QualitySettings.GetQualityLevel();
+			gameManagerStatic.GraphicsQuality = QualitySettings.GetQualityLevel();
+		}
 
 	}
 
@@ -187,6 +190,7 @@ public class PanelManager : MonoBehaviour {
 	public void SetQuality(int qualityIndex)
     {
 		QualitySettings.SetQualityLevel(qualityIndex);
-    }
+		gameManagerStatic.GraphicsQuality = QualitySettings.GetQualityLevel();
+	}
 
 }

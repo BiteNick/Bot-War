@@ -94,10 +94,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449449756425505030}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -111,12 +122,21 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449449756425505030}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_Radius: 0.00094446196
-  m_Height: 0.005232827
+  serializedVersion: 2
+  m_Radius: 0.0864525
+  m_Height: 0.46121538
   m_Direction: 2
-  m_Center: {x: 0, y: -0.00011793625, z: -0.0025558341}
+  m_Center: {x: 0.0042620525, y: 0.00006832183, z: -0.23055445}
 --- !u!82 &5047415493781097214
 AudioSource:
   m_ObjectHideFlags: 0
@@ -230,5 +250,5 @@ MonoBehaviour:
   explosionClip: {fileID: 8300000, guid: dfbfc711fa8208b4584f430e140bc867, type: 3}
   damage: 10
   radius: 10
-  lifeSpan: 12
+  lifeSpan: 11
   timeStep: 1
